@@ -23,7 +23,9 @@ Create an application (Frontend and Backend) that allows people to sign up for c
 - There is a cap of 10 people per course section.
 
 ## Notes
+
 - Make sure you have `yarn` installed on your machine. If you do not, please run:
+
 ```
 brew install yarn
 ```
@@ -53,3 +55,103 @@ yarn && yarn start
 - A list of users signed up for each course section should be visible.
 
 - A user should be able to register for a course and remove themselves from the course.
+
+# Sarah Self Thoughts
+
+- A course has:
+  - id
+  - name
+  - description
+  - 4 sessions
+  - sections that open every two weeks
+- A section has
+  - up to 10 enrolled users
+  - An associated course
+  - A start date
+- A session has:
+  - id
+  - An associated course
+  - A session number
+  - name
+  - description
+- A user has
+  - courses in which they are enrolled
+- A user can
+  - enroll in a section
+  - leave a section
+
+To Do:
+
+- Connect DB to FE
+- Tests
+- Front End Pages
+  - Log in page
+  - "Landing Page"
+    - List of courses
+    - Section start dates
+  - Course Page
+    - Course name/description
+    - Section dates
+  - Section Page
+    - Course name
+    - Session Dates
+    - Enrolled users
+    - Enroll/unenroll
+- Tests
+- Write/Clean up/Finish DB
+
+## Instructions
+
+### Run and Seed the Database
+
+Run the postgres database in the docker container by navigating to `/server` and running the command `docker-compose run db`. To seed the database, open another terminal to the same directory (`/server`) and run `yarn seed`. This will run a script that seeds the database with the provided sample data.
+
+To shut down the database, run `docker-compose down`. Note that if you wish to restart the database, you will need to re-seed it.
+
+## Running The App
+
+In order for the app to be fully operational, the database, server, and frontend apps must all be running.
+
+To run the database, follow the instructions above.
+
+To run the server, navigate to the `/server` folder in your terminal. Run `yarn install` to confirm that you have the latest `node_modules`, then run `yarn start`. This will run the server on port `8080`. Note that the frontend is sending requests to this port, so it cannot currently be changed (in a real world situation, I would use an environmental variable to determine the server URL).
+
+To run the frontend application, navigate to the `/course-client` folder. Run `yarn install` to confirm that you have the latest `node_modules`, then run `yarn start`. This will run the React app on port 3000, and the page will load automatically in your browser (yay create-react-app). Note that this port cannot be changed due to the CORS settings on the server.
+
+## Running Tests
+
+To run the server and database tests (written using Jest and Supertest), navigate to the `/server` folder and run `yarn test`.
+To run the frontend tests (written using Jest and React Testing Library), navigate to the `/course-client` folder and run `yarn test`.
+
+## Decision Log
+
+### Database
+
+I decided to use Sequelize for database modeling because that's what I've used in the past. My initial plan was to create a relationship between the `Section` and `User` tables (because a user is enrolled in a section), but I realized while writing the API code that for what I was building, it was easier to just have the sectionId as a field on the User model.
+For a full production database, creating that relationship would likely be the easier method.
+
+### User Login
+
+For the purpose of simplicity, I decided to let the frontend handle the decision as to whether a user is logged in or not (there is a `/login` endpoint, but all it does is confirm that the user's password is correct). In an real world situation, I would add some session handling middleware to handle the user's logged in/out state.
+
+## Questions I Had To Answer 
+### Can a user enroll in more than one course at a time?
+My initial thought was yes, but when creating the models, I decided that it would be easier to only allow a user to be enrolled in one course (/section) at a time.
+
+## Next Steps:
+
+- Finish API Tests
+- Frontend - set up redux or react-query
+- Log-In Page
+- Login Page Test
+
+## Things To Add If I Have Time
+- Update login to use session?
+
+** When writing tests, let my personality shine through - use baseball, disney, harry potter examples
+
+\*\* Create a frontend helper file (`request.js`?) that contains all of the data fetching functions?
+
+\*\* React Query instead of redux for frontend?
+
+\*\* CODE FORMATTING
