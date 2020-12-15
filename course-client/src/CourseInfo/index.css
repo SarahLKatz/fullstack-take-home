@@ -1,0 +1,12 @@
+.session {
+  padding-left: 8px;
+}
+
+.session .name {
+  font-weight: bold;
+}
+
+.session .description {
+  margin-top: 0;
+  padding-left: 16px;
+}

@@ -6,6 +6,8 @@ module.exports = router;
 
 router.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Methods", "GET,POST"),
+    res.header("Access-Control-Allow-Headers", "Content-Type");
   next();
 });
 
@@ -83,8 +85,8 @@ router.post("/section/:sectionId/enroll", async (req, res) => {
     });
     if (!section || !user) {
       res.status(404).send("Not found");
-    } else if (user.sectionId !== null ) {
-      res.status(400).send('User is already enrolled in a course')
+    } else if (user.sectionId !== null) {
+      res.status(400).send("User is already enrolled in a course");
     } else if (section.totalEnrolled === 10) {
       res.status(400).send("Section is full");
     } else {
@@ -121,12 +123,10 @@ router.post("/section/:sectionId/remove", async (req, res) => {
   }
 });
 
-// unenroll endpoint
-
 router.post("/signup", async (req, res) => {
   try {
     const user = await User.create(req.body);
-    res.json(user);
+    res.json({ id: user.id });
   } catch (err) {
     if (err.name === "SequelizeUniqueConstraintError") {
       res.status(401).send("User already exists");
@@ -135,8 +135,6 @@ router.post("/signup", async (req, res) => {
     }
   }
 });
-
-// Real World: Use session middleware
 
 router.post("/login", async (req, res, next) => {
   try {

@@ -1,28 +1,23 @@
 import React from "react";
-import fetch from "node-fetch";
+import { getCourses } from "../requests";
+import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
 
 const CourseList = () => {
-  const [courses, setCourses] = React.useState([{}]);
+  const { status, data: courses } = useQuery("courses", getCourses);
 
-  React.useEffect(() => {
-    const getData = async () => {
-      const response = await fetch("http://localhost:8080/api/courses");
-      const data = await response.json();
-      await setCourses(data);
-    };
-
-    getData();
-  }, []);
-
-  return (
+  return status === "success" ? (
     <div>
       {courses.map((course) => (
-        <div key={course.id}>
+        <div key={course.id} data-testid="course-in-list">
           <h2>{course.name}</h2>
           <p>{course.description}</p>
+          <Link to={`/course/${course.id}`}>More Info</Link>
         </div>
       ))}
     </div>
+  ) : (
+    <div />
   );
 };
 

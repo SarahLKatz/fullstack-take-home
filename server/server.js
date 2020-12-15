@@ -15,4 +15,4 @@ const server = app.listen(port, () => {
   console.log(`Course Signup Server listening at http://localhost:${port}`);
 });
 
-module.exports = {server, app};
+module.exports = { server, app };

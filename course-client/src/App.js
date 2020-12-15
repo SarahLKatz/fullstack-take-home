@@ -1,26 +1,43 @@
 import React from "react";
+import { QueryClientProvider } from "react-query";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.css";
 import CourseList from "./CourseList";
+import CourseInfo from "./CourseInfo";
+import LoginForm from "./LoginForm";
+import BasePage from "./BasePage";
+import SectionPage from "./SectionPage";
+import { queryClient, getLoggedInUser } from "./requests";
 
 function App() {
-  const [loggedInUser, setLoggedInUser] = React.useState(null);
+  const [loggedInUser, setLoggedInUser] = React.useState(true);
 
   return (
-    <div className="App">
-      {!!loggedInUser ? (
-        <div>Authenticated User Stuff Goes Here</div>
-      ) : (
-        <LoginForm />
-      )}
-      <CourseList />
-      <h1>Course Sign Up</h1>
-      <h2>Courses</h2>
-      <h2>Sign Up</h2>
-
-      <input type="text" placeholder="Name" />
-      <input type="text" placeholder="Email" />
-      <button onClick={() => alert("Sign up clicked!")}>Sign Up</button>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <BasePage>
+        <h1>Course Signup App</h1>
+        {!!loggedInUser ? (
+          <Router>
+            <Switch>
+              <Route exact path="/">
+                <CourseList />
+              </Route>
+              <Route exact path="/courses">
+                <CourseList />
+              </Route>
+              <Route exact path="/course/:id">
+                <CourseInfo />
+              </Route>
+              <Route path="/course/:id/section/:sectionId">
+                <SectionPage />
+              </Route>
+            </Switch>
+          </Router>
+        ) : (
+          <LoginForm />
+        )}
+      </BasePage>
+    </QueryClientProvider>
   );
 }
 
